@@ -12,7 +12,7 @@
 
 <body>
 
-   <section>
+   <section id="purchase-area">
       <div class="container">
          <div class="cart">
             <div class="col-md-12 col-lg-10 mx-auto">
@@ -77,6 +77,9 @@
          </div>
       </div>
    </section>
+   <section id="checkout-area">
+      <h1 class="thanking">Thanks for purchasing our product!</h1>
+   </section>
 
    <script>
 
@@ -112,6 +115,18 @@
          var phoneAmountNumber = parseFloat(currentPhoneAmount);
          phoneAmountNumber++;
          document.getElementById(id).value=phoneAmountNumber;
+
+         const currentSubTotal = document.getElementById('subTotal').innerText;
+         var currentSubTotalNumber = parseFloat(currentSubTotal);
+         if(id=="phone-amount")
+            currentSubTotalNumber += 1219;
+         else
+            currentSubTotalNumber += 59;
+         document.getElementById('subTotal').innerText=currentSubTotalNumber;
+
+         updateTax(currentSubTotalNumber);
+
+         updateTotal(currentSubTotalNumber);
       }
 
       // minus function
@@ -119,33 +134,50 @@
       {
          const currentPhoneAmount = document.getElementById(id).value;
          var phoneAmountNumber = parseFloat(currentPhoneAmount);
-         phoneAmountNumber--;
-         document.getElementById(id).value = phoneAmountNumber;
+         if(phoneAmountNumber-1<0)
+         {
+            alert("Invalid Item Number!!!");
+         }
+         else
+         {
+            phoneAmountNumber--;
+            document.getElementById(id).value = phoneAmountNumber;
+
+            const currentSubTotal = document.getElementById('subTotal').innerText;
+            var currentSubTotalNumber = parseFloat(currentSubTotal);
+            if(id=="phone-amount")
+               currentSubTotalNumber -= 1219;
+            else
+               currentSubTotalNumber -=59;
+            document.getElementById('subTotal').innerText=currentSubTotalNumber;
+
+            updateTax(currentSubTotalNumber);
+
+            updateTotal(currentSubTotalNumber);
+         }
+          
+      }
+      function updateTotal(currentSubTotalNumber)
+      {
+         const currentTotal = document.getElementById('total').innerText;
+         var currentTotalNumber = parseFloat(currentTotal);
+         var tax = document.getElementById('tax').innerText;
+         tax = parseFloat(tax);
+         currentTotalNumber = currentSubTotalNumber + tax;
+         document.getElementById('total').innerText=currentTotalNumber;
+      }
+      function updateTax(currentSubTotalNumber)
+      {
+         const tax = (currentSubTotalNumber*10)/100;
+         document.getElementById('tax').innerText=tax;
       }
 
-      // checkout button
+
+      // Checkout button implementation
       const checkOut = document.getElementById('checkOut');
       checkOut.addEventListener('click',function(){
-         var subTotal = document.getElementById('subTotal').innerText;
-         subTotal = parseFloat(subTotal);
-
-         var phoneAmount = document.getElementById('phone-amount').value;
-         phoneAmount = parseFloat(phoneAmount);
-         var caseAmount = document.getElementById('case-amount').value;
-         caseAmount = parseFloat(caseAmount);
-
-         var phonePrice = document.getElementById('phonePrice').innerText;
-         phonePrice = parseFloat(phonePrice);
-         var casePrice = document.getElementById('casePrice').innerText;
-         casePrice = parseFloat(casePrice);
-
-         subTotal = (phoneAmount)*phonePrice + (caseAmount)*casePrice;
-         document.getElementById('subTotal').innerText=subTotal;
-         
-         const tax = (subTotal*10)/100;
-         const total = subTotal+tax;
-         document.getElementById('total').innerText=total;
-         document.getElementById('tax').innerText=tax;
+         document.getElementById('purchase-area').style.display="none";
+         document.getElementById('checkout-area').style.display="block";
       });
 
    </script>
